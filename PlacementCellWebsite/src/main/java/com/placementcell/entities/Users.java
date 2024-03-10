@@ -2,6 +2,7 @@ package com.placementcell.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
 	private String email;
 	private String password;
 	private String role;

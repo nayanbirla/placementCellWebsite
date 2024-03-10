@@ -50,8 +50,4 @@ public class Questions {
 	public void setQuestionDetails(String[] questionDetails) {
 		this.questionDetails = questionDetails;
 	}
-	
-	
-	
-	
 }
