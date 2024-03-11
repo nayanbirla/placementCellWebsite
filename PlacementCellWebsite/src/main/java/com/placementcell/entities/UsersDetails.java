@@ -1,10 +1,12 @@
 package com.placementcell.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -23,7 +25,9 @@ public class UsersDetails {
 	private String personalEmail;
 	private String gender;
 	private String contact;
-	private String course;
+	@ManyToOne
+	@JsonManagedReference
+	private Course course;
 	private String image;
 	
 	public UsersDetails() {
@@ -32,7 +36,7 @@ public class UsersDetails {
 	}
 	
 	public UsersDetails(Users id, String firstName, String middleName, String lastName, String personalEmail,
-			String contact, String course, String image, String gender) {
+			String contact, Course course, String image, String gender) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -81,10 +85,10 @@ public class UsersDetails {
 	public void setContact(String contact) {
 		this.contact = contact;
 	}
-	public String getCourse() {
+	public Course getCourse() {
 		return course;
 	}
-	public void setCourse(String course) {
+	public void setCourse(Course course) {
 		this.course = course;
 	}
 	public String getImage() {
