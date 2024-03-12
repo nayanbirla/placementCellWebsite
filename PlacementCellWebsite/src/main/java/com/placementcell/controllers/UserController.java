@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.placementcell.dto.TokenResponse;
 import com.placementcell.entities.Users;
+import com.placementcell.request.LoginData;
 import com.placementcell.services.JwtService;
 import com.placementcell.services.UserInfoServices;
 import com.placementcell.services.UserService;
@@ -39,10 +41,14 @@ public class UserController {
 	@Autowired
 	private JwtService jwtService;
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Users> getDetails(@PathVariable int id){
-		return new ResponseEntity<Users>(userService.get(id),HttpStatus.OK);
+	@GetMapping("/{email}")
+	public ResponseEntity<Users> getDetails(@PathVariable String email){
+		
+		Users user=userService.getByEmail(email);
+		user.setPassword("");
+		return new ResponseEntity<Users>(user,HttpStatus.OK);
 	}
+	
 	
 	@PutMapping("/update")
 	public ResponseEntity<Users> update(@RequestBody Users users)
@@ -51,15 +57,28 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String addUser(@RequestBody Users users)
+	public TokenResponse loginUser(@RequestBody LoginData loginusers)
 	{
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(users.getEmail(),users.getPassword()));
+		try {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginusers.getEmail(),loginusers.getPassword()));
 		if(authentication.isAuthenticated())
 		{
-			return jwtService.genetateToke(users.getEmail(),users.getRole());
+			Users user=userService.getByEmail(loginusers.getEmail());
+			TokenResponse token=new TokenResponse();
+			token.setToken(jwtService.genetateToke(user.getEmail(),user.getRole()));
+			token.setStatus(true);
+			return token;
 		}else {
 			throw new UsernameNotFoundException("Invalid User Request");
 		}
+		}catch(Exception ee)
+		{
+			TokenResponse tokenfail=new TokenResponse();
+			tokenfail.setToken("Failed to Login! Something went Wrong");
+			tokenfail.setStatus(false);
+			return tokenfail;
+		}
+
 	}
 	
 	@PostMapping("/add")

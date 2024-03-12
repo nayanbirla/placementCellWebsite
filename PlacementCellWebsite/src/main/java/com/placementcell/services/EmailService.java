@@ -86,6 +86,7 @@ public class EmailService {
 			String password=otpPasswordData.getPassword();
 			Users user=userRepository.FindByEmail(email).get();
 			user.setPassword(password);
+			user.setRole("ROLE_USER");
 			userInfoServices.addUser(user);
 			return new OtpReceivedResponse(true,"Your password has seen changed successfully");
 		}

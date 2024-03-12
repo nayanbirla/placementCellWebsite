@@ -22,6 +22,7 @@ public class CompanyDetails {
     @Column(length = 1000)
     private String description;
     private boolean hiringStatus;
+    private String logo;
     @OneToMany(mappedBy = "companyDetailsPlaced")
     @JsonManagedReference
     private List<PlacedStudent> placedStudent;
@@ -34,12 +35,13 @@ public class CompanyDetails {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public CompanyDetails(int companyId, String companyName, String description, boolean hiringStatus) {
+	public CompanyDetails(int companyId, String companyName, String description, boolean hiringStatus,String logo) {
 		super();
 		this.companyId = companyId;
 		this.companyName = companyName;
 		this.description = description;
 		this.hiringStatus = hiringStatus;
+		this.logo=logo;
 	}
 	public long getCompanyId() {
 		return companyId;
@@ -64,6 +66,12 @@ public class CompanyDetails {
 	}
 	public void setHiringStatus(boolean hiringStatus) {
 		this.hiringStatus = hiringStatus;
+	}
+	public String getLogo() {
+		return logo;
+	}
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
     
     
