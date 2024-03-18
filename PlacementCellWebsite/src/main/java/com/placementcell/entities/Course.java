@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,9 +21,9 @@ public class Course {
 	private int courseId;
 	private String courseName;
 	
-	@JsonBackReference
-	@OneToMany(mappedBy ="course")
-	private List<UsersDetails> users;
+//	@JsonBackReference
+//	@OneToMany(mappedBy ="course",cascade=CascadeType.ALL)
+//	private List<UsersDetails> users;
 	public Course() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -44,12 +45,12 @@ public class Course {
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-	public List<UsersDetails> getUsers() {
-		return users;
-	}
-	public void setUsers(List<UsersDetails> users) {
-		this.users = users;
-	}
-	
+//	public List<UsersDetails> getUsers() {
+//		return users;
+//	}
+//	public void setUsers(List<UsersDetails> users) {
+//		this.users = users;
+//	}
+//	
 	
 }

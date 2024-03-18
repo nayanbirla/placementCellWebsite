@@ -3,6 +3,7 @@ package com.placementcell.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,10 +24,10 @@ public class Users {
 	private String password;
 	private String role;
 	@JsonManagedReference
-	@OneToOne(mappedBy = "id")
+	@OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
 	private UsersDetails usersDetails;
 	@JsonManagedReference
-	@OneToOne(mappedBy = "id")
+	@OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
 	private EducationDetails educationDetails;
 	
 	public Users() {
@@ -39,6 +40,17 @@ public class Users {
 		this.email = email;
 		this.password = password;
 		this.role = role;
+	}
+	
+	public Users(int id, String email, String password, String role, UsersDetails usersDetails,
+			EducationDetails educationDetails) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.usersDetails = usersDetails;
+		this.educationDetails = educationDetails;
 	}
 	public int getId() {
 		return id;
@@ -63,5 +75,23 @@ public class Users {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	@Override
+	public String toString() {
+		return "Users [id=" + id + ", email=" + email + ", password=" + password + ", role=" + role  + "]";
+	}
+	public UsersDetails getUsersDetails() {
+		return usersDetails;
+	}
+	public void setUsersDetails(UsersDetails usersDetails) {
+		this.usersDetails = usersDetails;
+	}
+	public EducationDetails getEducationDetails() {
+		return educationDetails;
+	}
+	public void setEducationDetails(EducationDetails educationDetails) {
+		this.educationDetails = educationDetails;
 	}	
+	
+	
 }

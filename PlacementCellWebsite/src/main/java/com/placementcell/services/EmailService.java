@@ -13,6 +13,7 @@ import com.placementcell.dto.OtpReceivedResponse;
 import com.placementcell.dto.OtpTokenSenderResponse;
 import com.placementcell.entities.Users;
 import com.placementcell.exceptions.InvalidEmailException;
+import com.placementcell.exceptions.UserNotFoundException;
 import com.placementcell.repository.UserRepository;
 import com.placementcell.request.EmailData;
 import com.placementcell.request.OtpPasswordData;
@@ -75,7 +76,7 @@ public class EmailService {
 	   
 	}
 	
-	public OtpReceivedResponse verifyOTP(OtpPasswordData otpPasswordData)
+	public OtpReceivedResponse verifyOTP(OtpPasswordData otpPasswordData) throws UserNotFoundException
 	{
 	    
 		String otpsend=jwtService.extractOtp(otpPasswordData.getToken());
@@ -84,7 +85,9 @@ public class EmailService {
 		{
 			String email=jwtService.extractUserName(otpPasswordData.getToken());
 			String password=otpPasswordData.getPassword();
-			Users user=userRepository.FindByEmail(email).get();
+			
+			Users user=userRepository.FindByEmail(email).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+			
 			user.setPassword(password);
 			user.setRole("ROLE_USER");
 			userInfoServices.addUser(user);

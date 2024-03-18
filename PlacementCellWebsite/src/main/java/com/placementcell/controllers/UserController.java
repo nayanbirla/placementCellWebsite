@@ -1,6 +1,7 @@
 package com.placementcell.controllers;
 
 import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.placementcell.dto.TokenResponse;
 import com.placementcell.entities.Users;
 import com.placementcell.request.LoginData;
+import com.placementcell.request.UserRequestData;
 import com.placementcell.services.JwtService;
 import com.placementcell.services.UserInfoServices;
 import com.placementcell.services.UserService;
@@ -51,13 +53,19 @@ public class UserController {
 	
 	
 	@PutMapping("/update")
-	public ResponseEntity<Users> update(@RequestBody Users users)
+	public ResponseEntity<?> update(@RequestBody UserRequestData userRequestData)
 	{
-		return new ResponseEntity<Users>(userService.add(users),HttpStatus.OK);
+		System.out.println(userRequestData);
+		try {
+	    return new ResponseEntity<Users>(userService.saveUserRequestData(userRequestData),HttpStatus.OK);
+		}catch(Exception ee)
+		{
+			return new ResponseEntity<String>(ee.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping("/login")
-	public TokenResponse loginUser(@RequestBody LoginData loginusers)
+	public ResponseEntity<TokenResponse> loginUser(@RequestBody LoginData loginusers)
 	{
 		try {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginusers.getEmail(),loginusers.getPassword()));
@@ -67,16 +75,16 @@ public class UserController {
 			TokenResponse token=new TokenResponse();
 			token.setToken(jwtService.genetateToke(user.getEmail(),user.getRole()));
 			token.setStatus(true);
-			return token;
+			return new ResponseEntity<TokenResponse>(token,HttpStatus.OK);
 		}else {
 			throw new UsernameNotFoundException("Invalid User Request");
 		}
 		}catch(Exception ee)
 		{
 			TokenResponse tokenfail=new TokenResponse();
-			tokenfail.setToken("Failed to Login! Something went Wrong");
+			tokenfail.setToken("Failed to Login! Something went Wrong" + ee.getMessage());
 			tokenfail.setStatus(false);
-			return tokenfail;
+			return new ResponseEntity<TokenResponse>(tokenfail,HttpStatus.BAD_REQUEST);
 		}
 
 	}
